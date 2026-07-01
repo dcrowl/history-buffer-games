@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>History Buffer Digital Games</title>
+<style>
+:root {
+  --ink:#24180f;
+  --paper:#fff7e8;
+  --paper2:#f3dfbd;
+  --deep:#11180f;
+  --deep2:#213019;
+  --green:#5d8738;
+  --gold:#e7bb55;
+  --rust:#a95d33;
+  --blue:#275b78;
+  --line:rgba(36,24,15,.16);
+  --shadow:0 18px 45px rgba(41,28,12,.22);
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  font-family:Georgia, "Times New Roman", serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 15%, rgba(231,187,85,.25), transparent 22%),
+    radial-gradient(circle at 90% 6%, rgba(93,135,56,.22), transparent 25%),
+    linear-gradient(180deg, #f9ecd5 0%, #ead2aa 100%);
+}
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.11;
+  background-image:
+    linear-gradient(30deg, rgba(36,24,15,.25) 12%, transparent 12.5%, transparent 87%, rgba(36,24,15,.25) 87.5%, rgba(36,24,15,.25)),
+    linear-gradient(150deg, rgba(36,24,15,.25) 12%, transparent 12.5%, transparent 87%, rgba(36,24,15,.25) 87.5%, rgba(36,24,15,.25));
+  background-size:80px 140px;
+}
+.topbar {
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:linear-gradient(90deg,#0e150d,#26351d);
+  color:#fff8e8;
+  border-bottom:4px solid var(--gold);
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+}
+.topbar-inner {
+  max-width:1240px;
+  margin:auto;
+  padding:12px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.brand {
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.logo {
+  width:76px;
+  height:76px;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));
+}
+.brand strong {
+  display:block;
+  font-size:clamp(1.35rem,2.6vw,2.35rem);
+  letter-spacing:1px;
+  line-height:1;
+  text-transform:uppercase;
+}
+.brand span {
+  display:block;
+  color:var(--gold);
+  font:800 .78rem Arial,sans-serif;
+  letter-spacing:2px;
+  margin-top:7px;
+  text-transform:uppercase;
+}
+.nav {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.nav a {
+  color:#fff8e8;
+  text-decoration:none;
+  font:900 .84rem Arial,sans-serif;
+  text-transform:uppercase;
+  padding:10px 12px;
+  border-radius:999px;
+}
+.nav a:hover { background:rgba(255,255,255,.12); }
+
+.hero {
+  min-height:610px;
+  position:relative;
+  display:grid;
+  align-items:center;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg, rgba(12,18,11,.95), rgba(12,18,11,.75), rgba(12,18,11,.25)),
+    url("assets/image-01-12eca79b5b.webp");
+  background-size:cover;
+  background-position:center;
+}
+.hero::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 70% 50%, transparent 0 22%, rgba(12,18,11,.5) 53%, rgba(12,18,11,.93) 100%),
+    linear-gradient(180deg, transparent 80%, rgba(12,18,11,.75));
+}
+.hero-inner {
+  position:relative;
+  z-index:2;
+  max-width:1240px;
+  margin:auto;
+  padding:58px 22px 92px;
+  display:grid;
+  grid-template-columns:minmax(280px, 530px) minmax(300px, 440px);
+  gap:54px;
+  align-items:center;
+}
+.kicker {
+  display:inline-block;
+  background:rgba(231,187,85,.15);
+  border:1px solid rgba(231,187,85,.55);
+  color:#ffe09a;
+  border-radius:999px;
+  padding:9px 14px;
+  font:900 .78rem Arial,sans-serif;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+.hero h1 {
+  margin:0;
+  color:#fff8e8;
+  font-size:clamp(3.1rem,7vw,6.2rem);
+  line-height:.92;
+  text-shadow:0 5px 18px rgba(0,0,0,.45);
+}
+.hero h1 span { color:#b8dc8c; display:block; }
+.hero p {
+  color:#fff6df;
+  max-width:480px;
+  font:400 1.18rem/1.65 Arial,sans-serif;
+  margin:26px 0;
+}
+.hero-buttons {
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+}
+.btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-width:152px;
+  border-radius:13px;
+  padding:13px 18px;
+  background:linear-gradient(180deg,#f0cd73,#d7a344);
+  color:#1f160c;
+  border:2px solid rgba(255,235,164,.85);
+  text-decoration:none;
+  font:900 .92rem Arial,sans-serif;
+  box-shadow:0 10px 22px rgba(0,0,0,.25);
+  cursor:pointer;
+}
+.btn.secondary {
+  background:rgba(255,255,255,.08);
+  color:#fff8e8;
+  border-color:rgba(231,187,85,.75);
+}
+.feature {
+  background:rgba(14,21,13,.9);
+  border:2px solid rgba(231,187,85,.45);
+  box-shadow:var(--shadow);
+  border-radius:26px;
+  overflow:hidden;
+}
+.feature-img {
+  position:relative;
+  height:245px;
+  overflow:hidden;
+}
+.feature-img img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.badge {
+  position:absolute;
+  top:14px;
+  left:14px;
+  background:var(--green);
+  color:white;
+  border-radius:999px;
+  padding:8px 12px;
+  font:900 .74rem Arial,sans-serif;
+  text-transform:uppercase;
+  box-shadow:0 5px 14px rgba(0,0,0,.3);
+}
+.feature-body {
+  color:#fff8e8;
+  padding:20px 22px 22px;
+}
+.feature-body h2 {
+  margin:0 0 8px;
+  font-size:2rem;
+}
+.feature-body p {
+  margin:0 0 17px;
+  color:#d5efa9;
+  font:800 .95rem Arial,sans-serif;
+}
+.main {
+  position:relative;
+  z-index:5;
+  max-width:1240px;
+  margin:-48px auto 70px;
+  padding:0 22px;
+}
+.panel {
+  background:rgba(255,247,232,.96);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.75);
+  border-radius:30px;
+  box-shadow:0 18px 40px rgba(75,51,17,.18);
+  padding:26px;
+  margin-bottom:28px;
+}
+.search-row {
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  margin-bottom:18px;
+}
+#searchInput {
+  width:100%;
+  border:2px solid var(--line);
+  background:white;
+  border-radius:999px;
+  padding:15px 18px;
+  font-size:1rem;
+  outline:none;
+}
+.filter-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.filter-btn {
+  border:1px solid var(--line);
+  background:white;
+  color:var(--ink);
+  border-radius:999px;
+  padding:10px 14px;
+  font:900 .82rem Arial,sans-serif;
+  cursor:pointer;
+}
+.filter-btn.active {
+  background:var(--deep2);
+  color:white;
+  border-color:var(--deep2);
+}
+.section-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:18px;
+  border-bottom:2px solid var(--line);
+  padding-bottom:11px;
+  margin:8px 0 20px;
+}
+.section-head h2 {
+  margin:0;
+  font-size:2.1rem;
+}
+.section-head p {
+  margin:0;
+  font:700 .9rem Arial,sans-serif;
+  color:#6d5738;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+  gap:20px;
+}
+.game-card {
+  background:#fffaf1;
+  border:1px solid rgba(36,24,15,.15);
+  border-radius:20px;
+  box-shadow:0 12px 26px rgba(66,43,15,.15);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:420px;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.game-card:hover {
+  transform:translateY(-5px);
+  box-shadow:0 22px 38px rgba(66,43,15,.24);
+}
+.thumb {
+  height:168px;
+  overflow:hidden;
+  background:#d9c39c;
+  position:relative;
+}
+.thumb img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform .25s ease;
+}
+.game-card:hover .thumb img { transform:scale(1.06); }
+.auto-thumb {
+  height:100%;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:#fff8e8;
+  padding:20px;
+  background:
+    linear-gradient(135deg, rgba(17,24,15,.86), rgba(93,135,56,.82)),
+    radial-gradient(circle at center, rgba(231,187,85,.4), transparent 50%);
+}
+.auto-thumb span {
+  font-size:2.8rem;
+  display:block;
+  margin-bottom:8px;
+}
+.ribbon {
+  position:absolute;
+  left:12px;
+  top:12px;
+  background:var(--green);
+  color:white;
+  border-radius:999px;
+  padding:6px 10px;
+  font:900 .7rem Arial,sans-serif;
+  text-transform:uppercase;
+  box-shadow:0 5px 14px rgba(0,0,0,.25);
+}
+.card-body {
+  padding:17px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+.game-card h3 {
+  margin:0 0 3px;
+  font-size:1.35rem;
+  line-height:1.08;
+}
+.subtitle {
+  color:var(--rust);
+  font-weight:900;
+  margin-bottom:10px;
+}
+.description {
+  margin:0 0 14px;
+  font:400 .95rem/1.45 Arial,sans-serif;
+  color:#3b2d20;
+  flex:1;
+}
+.meta {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-bottom:14px;
+}
+.tag {
+  background:#efe0c4;
+  border-radius:999px;
+  padding:6px 9px;
+  font:900 .72rem Arial,sans-serif;
+}
+.actions {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.small-btn {
+  border:none;
+  border-radius:10px;
+  padding:10px 8px;
+  text-align:center;
+  text-decoration:none;
+  background:var(--green);
+  color:white;
+  font:900 .82rem Arial,sans-serif;
+}
+.small-btn.printable {
+  background:white;
+  color:var(--ink);
+  border:1px solid var(--line);
+}
+.notice {
+  background:#fff1cf;
+  border:2px dashed var(--gold);
+  border-radius:18px;
+  padding:16px 18px;
+  font:400 1rem/1.5 Arial,sans-serif;
+}
+.hidden { display:none !important; }
+footer {
+  background:#11180f;
+  color:#fff8e8;
+  border-top:4px solid var(--gold);
+  text-align:center;
+  padding:34px 22px;
+}
+@media (max-width:850px) {
+  .topbar-inner { flex-direction:column; align-items:flex-start; }
+  .hero-inner { grid-template-columns:1fr; padding-bottom:76px; }
+  .hero { min-height:auto; }
+  .search-row { grid-template-columns:1fr; }
+  .feature-img { height:200px; }
+  .main { margin-top:-30px; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <img class="logo" src="assets/image-02-f41b5d3320.webp" alt="History Buffer logo">
+      <div>
+        <strong>History Buffer</strong>
+        <span>Interactive History Games</span>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#games">Digital Games</a>
+      <a href="#featured">Featured</a>
+      <a href="#github">GitHub Games</a>
+      <a href="#teacher-note">Teacher Notes</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="kicker">History • Strategy • Classroom Ready</span>
+      <h1>Learn History.<span>Play to Win.</span></h1>
+      <p>Browse digital history games from History Buffer. Each game card can link to a live GitHub Pages game and a matching printable version.</p>
+      <div class="hero-buttons">
+        <a class="btn" href="#games">▶ Browse Games</a>
+        <a class="btn secondary" href="#github">★ Load GitHub Repos</a>
+      </div>
+    </div>
+    <article class="feature" id="featured">
+      <div class="feature-img">
+        <img src="assets/image-01-12eca79b5b.webp" alt="King Philip's War game screenshot">
+        <span class="badge">Featured</span>
+      </div>
+      <div class="feature-body">
+        <h2>King Philip's War</h2>
+        <p>Colonial America • Grades 4–8 • 2 Players or AI</p>
+        <div class="hero-buttons">
+          <a class="btn" href="https://dcrowl.github.io/king-philips-war/" target="_blank">▶ Play Game</a>
+          <a class="btn secondary" href="#" target="_blank">Printable</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<main class="main">
+  <section class="panel">
+    <div class="search-row">
+      <input id="searchInput" type="search" placeholder="Search by game title, era, topic, or keyword...">
+      <button class="btn" id="clearSearch">Clear</button>
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" data-filter="all">All Games</button>
+      <button class="filter-btn" data-filter="american">American History</button>
+      <button class="filter-btn" data-filter="colonial">Colonial America</button>
+      <button class="filter-btn" data-filter="revolution">American Revolution</button>
+      <button class="filter-btn" data-filter="world">World History</button>
+      <button class="filter-btn" data-filter="geography">Geography</button>
+      <button class="filter-btn" data-filter="ancient">Ancient History</button>
+    </div>
+  </section>
+
+  <section class="panel" id="games">
+    <div class="section-head">
+      <div>
+        <h2>History Buffer Social Studies Games</h2>
+        <p>Find the whole unit study on https://www.teacherspayteachers.com/store/history-buffer-games</p>
+      </div>
+    </div>
+    <div class="grid" id="manualGrid"></div>
+  </section>
+
+  <section class="panel" id="github">
+    <div class="section-head">
+      <div>
+        <h2>GitHub Game Library</h2>
+        <p>Auto-loads public repositories from github.com/dcrowl.</p>
+      </div>
+    </div>
+    <div class="notice">
+      This section pulls your public repositories from GitHub when the page opens. For each repository, the Play button assumes the game lives at <strong>https://dcrowl.github.io/repository-name/</strong>.
+    </div>
+    <br>
+    <div class="grid" id="repoGrid"></div>
+  </section>
+
+  <section class="panel" id="teacher-note">
+    <div class="section-head">
+      <div>
+        <h2>Easy Editing</h2>
+        <p>How to add each new game.</p>
+      </div>
+    </div>
+    <div class="notice">
+      To add a polished card with a screenshot, add one new object to the <strong>manualGames</strong> list near the bottom of this HTML file. Add the title, category, GitHub Pages link, TPT link, and screenshot.
+    </div>
+  </section>
+</main>
+
+<footer>
+  © History Buffer — Digital history games for classrooms and homeschool families.
+</footer>
+
+<script>
+const IMG = {
+  king: "assets/image-01-12eca79b5b.webp",
+  jamestown: "assets/image-03-db2ae0c87a.webp",
+  national: "assets/image-04-287c7ab833.webp",
+  berlin: "assets/image-05-4cca31bcc9.webp",
+  bunker: "assets/image-06-7a24065475.webp",
+
+  longIsland: "assets/image-07-2c59f1d138.webp",
+  valleyForge: "assets/image-08-3b1bcce044.webp",
+  americanRevCards: "assets/image-09-6188086b39.webp",
+  silkRoad: "assets/image-10-180b5210e6.webp",
+  balancePower: "assets/image-11-c50ac4f5f0.webp",
+  underground: "assets/image-12-8a5c7d3fc6.webp",
+  fortSumter: "assets/image-13-7a8ef15af6.webp",
+  gettysburg: "assets/image-14-b7daa9e77a.webp",
+  cattleDrive: "assets/image-15-096a91c198.webp",
+  mongolJapan: "assets/image-16-b95c3a930f.webp",
+  greekPhoenician: "assets/image-17-ece91a02f1.webp",
+  thermopylae: "assets/image-18-0446ac78f8.webp",
+  goldenAge: "assets/image-19-16538ddde4.webp",
+  punicWars: "assets/image-20-2817b8f28c.webp",
+  barbarianInvasions: "assets/image-21-95ef0439fd.webp",
+  ivanGreat: "assets/image-22-359c9f9cca.webp"
+};
+
+const manualGames = [
+  {
+    title: "King Philip's War",
+    subtitle: "Colonial America",
+    category: "american colonial",
+    description: "Students compete across New England with movement, allies, retreats, and strategic choices.",
+    tags: ["Grades 4–8", "2 Players or AI"],
+    image: IMG.king,
+    badge: "Featured",
+    play: "https://dcrowl.github.io/king-philips-war/",
+    printable: "#"
+  },
+  {
+    title: "The Battle of Long Island, 1775",
+    subtitle: "American Revolution",
+    category: "american revolution",
+    description: "The Battle of Long Island map strategy game with British and American starting positions.",
+    tags: ["American History", "Digital / Printable"],
+    image: IMG.longIsland,
+    badge: "New",
+    play: "https://dcrowl.github.io/battle-of-long-island/",
+    printable: "#"
+  },
+  {
+    title: "Valley Forge",
+    subtitle: "American Revolution",
+    category: "american revolution",
+    description: "A printable-style Valley Forge collection and coin game board.",
+    tags: ["American History", "Digital / Printable"],
+    image: IMG.valleyForge,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "The American Revolution Battle Game",
+    subtitle: "American Revolution",
+    category: "american revolution",
+    description: "A playable two-player card battle game with American and British leaders.",
+    tags: ["American History", "Digital / Printable"],
+    image: IMG.americanRevCards,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "The Silk Road Game",
+    subtitle: "Ancient World",
+    category: "ancient world",
+    description: "Travel across the Silk Road, collect goods, and race to complete your inventory.",
+    tags: ["Ancient History", "Digital / Printable"],
+    image: IMG.silkRoad,
+    badge: "New",
+    play: "https://dcrowl.github.io/silk-road-game/",
+    printable: "#"
+  },
+  {
+    title: "Balance of Power",
+    subtitle: "Civics",
+    category: "civics",
+    description: "A branches of government board game focused on the legislative, executive, and judicial branches.",
+    tags: ["Civics", "Digital / Printable"],
+    image: IMG.balancePower,
+    badge: "",
+    play: "https://dcrowl.github.io/branchesofpowergame/",
+    printable: "#"
+  },
+  {
+    title: "Underground Railroad",
+    subtitle: "American History",
+    category: "american history",
+    description: "A route-and-symbol map game across the United States.",
+    tags: ["American History", "Digital / Printable"],
+    image: IMG.underground,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "The Battle of Fort Sumter",
+    subtitle: "Civil War",
+    category: "civil war",
+    description: "A Fort Sumter map game with dice actions, bombardment, movement, and fort spaces.",
+    tags: ["American History", "Digital / Printable"],
+    image: IMG.fortSumter,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "Gettysburg",
+    subtitle: "Civil War",
+    category: "civil war",
+    description: "A Civil War strategy board game using counters, attacks, and capital capture.",
+    tags: ["American History", "Digital / Printable"],
+    image: IMG.gettysburg,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "Cattle Drive 1865\u20131868",
+    subtitle: "American West",
+    category: "american geography",
+    description: "Move cattle along the trails in this American West board game.",
+    tags: ["American History", "Digital / Printable"],
+    image: IMG.cattleDrive,
+    badge: "",
+    play: "https://dcrowl.github.io/cattle-drive/",
+    printable: "#"
+  },
+  {
+    title: "Mongol Invasions of Japan",
+    subtitle: "World History",
+    category: "world",
+    description: "A Rock, Paper, Scissors strategy game about the Mongol invasions of Japan.",
+    tags: ["World History", "Digital / Printable"],
+    image: IMG.mongolJapan,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "Greek and Phoenician Colonies",
+    subtitle: "Ancient World",
+    category: "ancient world",
+    description: "A Mediterranean colonization and trade game covering Greek and Phoenician colonies.",
+    tags: ["Ancient History", "Digital / Printable"],
+    image: IMG.greekPhoenician,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "The Battle of Thermopylae",
+    subtitle: "Ancient World",
+    category: "ancient world",
+    description: "A Greece and Persia battle game with dice actions and Rock, Paper, Scissors combat.",
+    tags: ["Ancient History", "Digital / Printable"],
+    image: IMG.thermopylae,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "Golden Age",
+    subtitle: "Ancient Greece",
+    category: "ancient world",
+    description: "A game board focused on Pericles, the Parthenon, the Delian League, theater, navy, and Greek culture.",
+    tags: ["Ancient History", "Digital / Printable"],
+    image: IMG.goldenAge,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "The Punic Wars",
+    subtitle: "Ancient World",
+    category: "ancient world",
+    description: "A playable Punic Wars strategy game across the western Mediterranean.",
+    tags: ["Ancient History", "Digital / Printable"],
+    image: IMG.punicWars,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "Barbarian Invasions",
+    subtitle: "Ancient World",
+    category: "ancient world",
+    description: "A Roman Empire map game showing major barbarian movements and invasion routes.",
+    tags: ["Ancient History", "Digital / Printable"],
+    image: IMG.barbarianInvasions,
+    badge: "",
+    play: "#",
+    printable: "#"
+  },
+  {
+    title: "Ivan the Great and the Grand Duchy of Moscow",
+    subtitle: "World History",
+    category: "world",
+    description: "A Rock, Paper, Scissors map game about expansion under Ivan the Great.",
+    tags: ["World History", "Digital / Printable"],
+    image: IMG.ivanGreat,
+    badge: "New",
+    play: "https://dcrowl.github.io/ivan-great/",
+    printable: "#"
+  }
+];
+
+let activeFilter = "all";
+
+function niceTitle(repoName) {
+  return repoName
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, c => c.toUpperCase())
+    .replace(/Usa/g, "USA")
+    .replace(/Ai/g, "AI");
+}
+
+function inferCategory(text) {
+  const s = text.toLowerCase();
+  if (s.includes("rome") || s.includes("punic") || s.includes("gaul") || s.includes("silk") || s.includes("zheng")) return "ancient world";
+  if (s.includes("revolution") || s.includes("bunker") || s.includes("long-island") || s.includes("americanrev")) return "american revolution";
+  if (s.includes("jamestown") || s.includes("colonial") || s.includes("philip") || s.includes("underground")) return "american colonial";
+  if (s.includes("national") || s.includes("train") || s.includes("usa")) return "american geography";
+  return "world";
+}
+
+function cardTemplate(game, isRepo=false) {
+  const tags = (game.tags || ["Digital Game"]).map(t => `<span class="tag">${t}</span>`).join("");
+  const badge = game.badge ? `<span class="ribbon">${game.badge}</span>` : "";
+  const image = game.image
+    ? `<img src="${game.image}" alt="${game.title} screenshot">${badge}`
+    : `<div class="auto-thumb"><div><span>🗺️</span><strong>${game.title}</strong></div></div>${badge}`;
+  return `
+    <article class="game-card" data-category="${game.category}" data-title="${game.title} ${game.subtitle || ""} ${game.description || ""}">
+      <div class="thumb">${image}</div>
+      <div class="card-body">
+        <h3>${game.title}</h3>
+        <div class="subtitle">${game.subtitle || (isRepo ? "GitHub Digital Game" : "")}</div>
+        <p class="description">${game.description || "Interactive History Buffer digital game hosted from GitHub."}</p>
+        <div class="meta">${tags}</div>
+        <div class="actions">
+          <a class="small-btn" href="${game.play}" target="_blank">▶ Play</a>
+          <a class="small-btn printable" href="${game.printable || "#"} target="_blank">Printable</a>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderManualGames() {
+  document.getElementById("manualGrid").innerHTML = manualGames.map(g => cardTemplate(g)).join("");
+}
+
+async function loadRepos() {
+  const repoGrid = document.getElementById("repoGrid");
+  repoGrid.innerHTML = `<div class="notice">Loading public repositories from GitHub...</div>`;
+  try {
+    const res = await fetch("https://api.github.com/users/dcrowl/repos?per_page=100&sort=updated");
+    const repos = await res.json();
+    const games = repos
+      .filter(r => !r.fork)
+      .map(r => {
+        const category = inferCategory((r.name || "") + " " + (r.description || ""));
+        return {
+          title: niceTitle(r.name),
+          subtitle: "GitHub Digital Game",
+          category,
+          description: r.description || "Interactive digital game from History Buffer.",
+          tags: [category.includes("american") ? "American History" : category.includes("ancient") ? "Ancient History" : "World History", "GitHub Pages"],
+          badge: "",
+          play: `https://dcrowl.github.io/${r.name}/`,
+          printable: "#"
+        };
+      });
+    repoGrid.innerHTML = games.map(g => cardTemplate(g, true)).join("");
+    updateCards();
+  } catch (err) {
+    repoGrid.innerHTML = `<div class="notice">I could not load GitHub repositories automatically. You can still add repo cards manually in the manualGames list.</div>`;
+  }
+}
+
+function updateCards() {
+  const q = document.getElementById("searchInput").value.toLowerCase().trim();
+  document.querySelectorAll(".game-card").forEach(card => {
+    const category = (card.dataset.category || "").toLowerCase();
+    const text = ((card.dataset.title || "") + " " + card.innerText).toLowerCase();
+    const matchesFilter = activeFilter === "all" || category.includes(activeFilter);
+    const matchesSearch = !q || text.includes(q);
+    card.classList.toggle("hidden", !(matchesFilter && matchesSearch));
+  });
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    updateCards();
+  });
+});
+
+document.getElementById("searchInput").addEventListener("input", updateCards);
+document.getElementById("clearSearch").addEventListener("click", () => {
+  document.getElementById("searchInput").value = "";
+  activeFilter = "all";
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  document.querySelector('.filter-btn[data-filter="all"]').classList.add("active");
+  updateCards();
+});
+
+renderManualGames();
+loadRepos();
+</script>
+</body>
+</html>
