@@ -535,7 +535,7 @@ footer {
         <p>Colonial America • Grades 4–8 • 2 Players or AI</p>
         <div class="hero-buttons">
           <a class="btn" href="https://dcrowl.github.io/king-philips-war/" target="_blank">▶ Play Game</a>
-          <a class="btn secondary" href="#" target="_blank">Printable</a>
+          <a class="btn secondary" href="https://www.teacherspayteachers.com/Product/13-Colonies-Digital-Game-King-Philips-War-Metacom-Puritans-3rd-Grade-11454963" target="_blank" rel="noopener">Printable</a>
         </div>
       </div>
     </article>
@@ -936,6 +936,62 @@ const manualGames = [
   }
 ];
 
+const knownPlayLinks = [
+  ["train rush usa", "https://dcrowl.github.io/train-rush-usa/"],
+  ["transportation in the 1800s", "https://dcrowl.github.io/train-rush-usa/"],
+  ["national parks", "https://dcrowl.github.io/national-parks/"],
+  ["tiny islands", "https://dcrowl.github.io/tiny-islands-math/"],
+  ["tiny islands math", "https://dcrowl.github.io/tiny-islands-math/"],
+  ["gaul", "https://dcrowl.github.io/gaul-rome/"],
+  ["roman empire gaul", "https://dcrowl.github.io/gaul-rome/"],
+  ["gold rush", "https://dcrowl.github.io/goldrush/"],
+  ["goldrush", "https://dcrowl.github.io/goldrush/"],
+  ["augustus", "https://dcrowl.github.io/augustus-pax-romana/"],
+  ["pax romana", "https://dcrowl.github.io/augustus-pax-romana/"],
+  ["bunker hill", "https://dcrowl.github.io/bunkerhill/"],
+  ["bunkerhill", "https://dcrowl.github.io/bunkerhill/"],
+  ["jamestown", "https://dcrowl.github.io/jamestown/"],
+  ["zheng he", "https://dcrowl.github.io/zhenghe/"],
+  ["zhenghe", "https://dcrowl.github.io/zhenghe/"],
+  ["king philip", "https://dcrowl.github.io/king-philips-war/"],
+  ["metacom", "https://dcrowl.github.io/king-philips-war/"],
+  ["battle of long island", "https://dcrowl.github.io/battle-of-long-island/"],
+  ["long island", "https://dcrowl.github.io/battle-of-long-island/"],
+  ["valley forge", "https://dcrowl.github.io/valley-forge/"],
+  ["american revolution card", "https://dcrowl.github.io/americanrev-cardgame/"],
+  ["americanrev", "https://dcrowl.github.io/americanrev-cardgame/"],
+  ["silk road", "https://dcrowl.github.io/silkroad/"],
+  ["silkroad", "https://dcrowl.github.io/silkroad/"],
+  ["branches of power", "https://dcrowl.github.io/branchesofpowergame/"],
+  ["balance of power", "https://dcrowl.github.io/branchesofpowergame/"],
+  ["underground railroad", "https://dcrowl.github.io/undergroundrailroad/"],
+  ["fort sumter", "https://dcrowl.github.io/fort-sumter/"],
+  ["gettysburg", "https://dcrowl.github.io/gettysburg/"],
+  ["cattle drive", "https://dcrowl.github.io/cattle-drive/"],
+  ["mongol invasion", "https://dcrowl.github.io/mongol-invasion-japan/"],
+  ["mongol invasions of japan", "https://dcrowl.github.io/mongol-invasion-japan/"],
+  ["greek and phoenician", "https://dcrowl.github.io/greek-phoenician-colonies/"],
+  ["phoenician colonies", "https://dcrowl.github.io/greek-phoenician-colonies/"],
+  ["thermopylae", "https://dcrowl.github.io/persianinvasion-greece/"],
+  ["persian invasion", "https://dcrowl.github.io/persianinvasion-greece/"],
+  ["golden age", "https://dcrowl.github.io/goldenage-athens/"],
+  ["athens", "https://dcrowl.github.io/goldenage-athens/"],
+  ["punic wars", "https://dcrowl.github.io/rome-punic-wars/"],
+  ["barbarian invasions", "https://dcrowl.github.io/rome-barbarian-invasions/"],
+  ["ivan the great", "https://dcrowl.github.io/ivan-great/"]
+];
+
+function normalizeGameText(text) {
+  return (text || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function exactKnownPlayLink(text) {
+  const q = normalizeGameText(text);
+  if (!q) return "";
+  const hit = knownPlayLinks.find(([name]) => q.includes(normalizeGameText(name)) || normalizeGameText(name).includes(q));
+  return hit ? hit[1] : "";
+}
+
 let activeFilter = "all";
 
 function niceTitle(repoName) {
@@ -964,15 +1020,15 @@ function cardTemplate(game, isRepo=false) {
     : `<div class="auto-thumb"><div><span>🗺️</span><strong>${game.title}</strong></div></div>${badge}`;
   return `
     <article class="game-card" data-category="${game.category}" data-title="${game.title} ${game.subtitle || ""} ${game.description || ""}">
-      <div class="thumb">${image}</div>
+      <a class="thumb" href="${game.play}" target="_blank" rel="noopener" aria-label="Play ${game.title}">${image}</a>
       <div class="card-body">
-        <h3>${game.title}</h3>
+        <h3><a href="${game.play}" target="_blank" rel="noopener">${game.title}</a></h3>
         <div class="subtitle">${game.subtitle || (isRepo ? "GitHub Digital Game" : "")}</div>
         <p class="description">${game.description || "Interactive History Buffer digital game hosted from GitHub."}</p>
         <div class="meta">${tags}</div>
         <div class="actions">
-          <a class="small-btn" href="${game.play}" target="_blank">▶ Play</a>
-          <a class="small-btn printable" href="${tptLink}" target="_blank">Get TPT Unit Study</a>
+          <a class="small-btn" href="${game.play}" target="_blank" rel="noopener">▶ Play</a>
+          <a class="small-btn printable" href="${tptLink}" target="_blank" rel="noopener">Get TPT Unit Study</a>
         </div>
       </div>
     </article>
@@ -1011,11 +1067,17 @@ function playGithubSearch() {
     help.textContent = "Type a game title first, then click Play.";
     return;
   }
+  const knownLink = exactKnownPlayLink(q);
+  if (knownLink) {
+    window.open(knownLink, "_blank");
+    help.textContent = "Opening the matched GitHub game...";
+    return;
+  }
   const manualMatch = manualGames.find(g =>
-    (g.title + " " + (g.subtitle || "") + " " + (g.description || "")).toLowerCase().includes(q) && g.play && g.play !== "#"
+    normalizeGameText(g.title + " " + (g.subtitle || "") + " " + (g.description || "")).includes(normalizeGameText(q)) && g.play && g.play !== "#"
   );
   const repoMatch = githubGames.find(g =>
-    (g.title + " " + g.repoName + " " + g.description).toLowerCase().includes(q)
+    normalizeGameText(g.title + " " + g.repoName + " " + g.description).includes(normalizeGameText(q))
   );
   const match = manualMatch || repoMatch;
   if (match && match.play && match.play !== "#") {
